@@ -1,32 +1,28 @@
-const gulp = require("gulp");
-const browserSync = require("browser-sync").create();
-const sass = require("gulp-sass");
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const browserSync = require('browser-sync').create();
 
-// Compiles Sass
+// Compile Sass & Inject Into Browser
 function style() {
-  return (
-    gulp
-      // selects where to look for our scss files
-      .src(["src/scss/*.scss"])
-      // passes the file through sass compiler
-      .pipe(sass().on("error", sass.logError))
-      // selects where our compiled css will go
-      .pipe(gulp.dest("src/css"))
-      // stream changes to all browsers
-      .pipe(browserSync.stream())
-  );
+  return gulp
+    .src('./src/scss/**/*.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('./src/css'));
 }
 
-//Watch and server
+// Watch Sass & Serve
 function watch() {
   browserSync.init({
-    server: "./src"
+    server: {
+      baseDir: './src'
+    }
   });
 
-  gulp.watch("src/scss/*.scss", style);
-  gulp.watch("src/*.html").on("change", browserSync.reload);
-  gulp.watch("./js/**/*.js").on("change", browserSync.reload);
+  gulp.watch('./src/scss/**/*.scss', style);
+  gulp.watch('./src/*.html').on('change', browserSync.reload);
+  gulp.watch('./src/js/**/*.js').on('change', browserSync.reload);
 }
 
+// Default Task
 exports.style = style;
 exports.watch = watch;
